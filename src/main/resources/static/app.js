@@ -45,7 +45,8 @@ function executeOnSignedUrl(file, callback)
   {
     if (this.readyState == 4 && this.status == 200)
     {
-      callback(decodeURIComponent(this.responseText));
+      var responseBody = JSON.parse(this.response);
+      callback(responseBody.uri);
     }
     else if (this.readyState == 4 && this.status != 200)
     {

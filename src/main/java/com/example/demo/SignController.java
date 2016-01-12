@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,16 +23,16 @@ public class SignController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SignController.class);
 
-	@Value("#{aws.s3.accessKey}")
+	@Value("${aws.s3.accessKey}")
 	private String S3_ACCESS_KEY;
 
-	@Value("#{aws.s3.secretKey}")
+	@Value("${aws.s3.secretKey}")
 	private String S3_SECRET_KEY;
 
-	@Value("#{aws.s3.bucket}")
+	@Value("${aws.s3.bucket}")
 	private String S3_BUCKET;
 
-	@Value("#{aws.s3.url}")
+	@Value("${aws.s3.url}")
 	private String S3_URL;
 
 	private static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
@@ -39,7 +40,7 @@ public class SignController {
 	private int EXPIRE_DURATION = 60 * 5; // 5 minutes
 
 
-	@RequestMapping("/signput")
+	@RequestMapping(value = "/signput", method = RequestMethod.GET)
 	public ResponseEntity signPut(@RequestParam("name") String name, @RequestParam("mimeType") String mimeType)
 		throws ServletException, URISyntaxException {
 
