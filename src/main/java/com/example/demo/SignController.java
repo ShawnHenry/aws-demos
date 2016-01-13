@@ -32,7 +32,7 @@ public class SignController {
 	@Value("${aws.s3.bucket}")
 	private String S3_BUCKET;
 
-	@Value("${aws.s3.url}")
+	@Value("https://${aws.s3.bucket}.s3-${aws.s3.region}.amazonaws.com")
 	private String S3_URL;
 
 	private static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
@@ -60,8 +60,8 @@ public class SignController {
 
 		String signed = calculateRFC2104HMAC(stringToSign, S3_SECRET_KEY);
 
-		URI uri = new URI(String.format("%s/%s/%s?AWSAccessKeyId=%s&Expires=%d&Signature=%s",
-			S3_URL, S3_BUCKET, name, S3_ACCESS_KEY, expireTime, signed));
+		URI uri = new URI(String.format("%s/%s?AWSAccessKeyId=%s&Expires=%d&Signature=%s",
+			S3_URL, name, S3_ACCESS_KEY, expireTime, signed));
 
 		Map<String,Object> responseBody = new HashMap<>();
 		responseBody.put("uri", uri);
