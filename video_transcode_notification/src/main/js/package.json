@@ -1,0 +1,15 @@
+{
+  "name": "s3upload-demo-lamba",
+  "version": "1.0.0",
+  "description": "AWS S3 browser upload demo project for Spring Boot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rory Hunter <roryhunter2@gmail.com>",
+  "license": "ISC",
+  "private": true,
+  "dependencies": {
+    "aws-sdk": "^2.2.29"
+  }
+}

@@ -1,11 +1,12 @@
-# S3 Direct Upload And Video Transcoding Demo
+# S3 Direct Upload And Video Transcoding Demo With SNS Notifications
 
-# Provisioning
+## Provisioning Part 1
 
-Unlike the [upload only](../upload_only/) demo, provisioning for this demo
-is harder because it's not yet possible to automate all the steps with
-Terraform. There is a configuration under `src/main/terraform` but it's not
-complete (it lacks Elastic Transcoder support).
+The same caveats about provision apply here as in the
+[video_transcode](../video_transcode/) demo. Furthermore, in order for the
+application to receive notifications from SNS, it must be possible for AWS to
+make a call to an HTTP(S) endpoint. That means that this demo app must be hosted
+somewhere that AWS can access.
 
 1. Change into `src/main/terraform` under the demo directory.
 
@@ -16,9 +17,10 @@ complete (it lacks Elastic Transcoder support).
 3. Configure the remaining AWS variables in
    `variables.tf`.
 
-4. Disable the Lambda config:
+4. Disable the Lambda and SNS config:
 
     `mv aws_lambda.tf aws_lambda.tf.disabled`
+    `mv aws_sns.tf aws_sns.tf.disabled`
 
 5. Run the following to check all is well:
 
@@ -51,14 +53,38 @@ complete (it lacks Elastic Transcoder support).
     input bucket's properties. Change the Events sections and add a
     notification on `ObjectCreated` to call the lambda created above.
 
-# Running the demo
+## Installing the demo
 
-1. Edit `src/main/resources/application.properties` to set the appropriate
-   values.
+1. Build the app with:
 
-2. Run maven with `mvn`.
+    `mvn package`
 
-3. Navigate to [http://localhost:8080/](http://localhost:8080/).
+2. Deploy it somewhere accessible from the public internet e.g. ECS,
+DigitalOcean, etc. Alongside the jar, you'll need an appropriately configured `application.properties`.
+
+## Provisioning Part 2
+
+1. With the app running, we can now create the SNS topic and subscribe the app
+as an endpoint for it. Re-enable the Terraform file:
+
+    `mv aws_sns.tf.disabled aws_sns.tf`
+
+2. Ensure the HTTP endpoint is configured in `variables.tf`.
+
+3. Run the plan again to check all is well:
+
+    `terraform plan`
+
+4. Apply the remaining config:
+
+    `terraform apply`
+
+5. Check in the [SNS Console](https://console.aws.amazon.com/sns/v2/home) that
+the endpoint has successfully confirmed itself as an endpoint.
+
+## Running the demo
+
+3. Navigate to wherever you hosted your application.
 
 4. Upload a video.
 
@@ -67,3 +93,5 @@ complete (it lacks Elastic Transcoder support).
    console to see if a job has been scheduled. If not, check the [Lamba
    console](https://console.aws.amazon.com/lambda/home) and see if there
    were any errors.
+
+6. TODO - where can we check for received notifications?
