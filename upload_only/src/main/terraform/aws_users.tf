@@ -26,12 +26,7 @@ resource "aws_iam_group_policy" "group_policy" {
     {
       "Effect": "Allow",
       "Action": "s3:*",
-      "Resource": "${aws_s3_bucket.video_input_bucket.arn}/*"
-    },
-    {
-      "Effect": "Allow",
-      "Action": "s3:*",
-      "Resource": "${aws_s3_bucket.video_output_bucket.arn}/*"
+      "Resource": "${aws_s3_bucket.input_bucket.arn}/*"
     }
   ]
 }

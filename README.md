@@ -8,32 +8,43 @@ with some Java inspiration from the
 [EvaporateJS](https://github.com/TTLabs/EvaporateJS/blob/master/example/SigningExample.java)
 repo.
 
+The demos are as follows:
+
+* [upload_only](upload_only/) - just uploading files to an S3 bucket.
+* [video_transcode](video_transcode/) - upload to S3, then kick off an
+  [Elastic Transcoder](https://aws.amazon.com/elastictranscoder/) job via
+  [Lambda](https://aws.amazon.com/lambda/).
+
 # Provisioning
 
-There is a [Terraform]() configuration under `src/main/terraform`. You can
-build the necessary infrastructure to run this project as follows.
+For each demo there is a [Terraform]() configuration under
+`src/main/terraform`. You can build the necessary infrastructure to run
+each demo as follows.
 
+1. Change into `src/main/terraform` under the demo directory.
 
-1. Set the following environment variables:
+2. Set the following environment variables:
   * `TF_VAR_AWS_SECRET_KEY`
   * `TF_VAR_AWS_ACCESS_KEY`
 
-2. Configure the remaining AWS variables in
-   `src/main/terraform/variables.tf`.
+3. Configure the remaining AWS variables in
+   `variables.tf`.
 
-3. Run the following to check all is well:
+4. Run the following to check all is well:
 
     `terraform plan`
 
-4. Apply the config:
+5. Apply the config:
 
     `terraform apply`
 
-# Running the project
+# Running a demo
 
-1. Edit `src/main/resources/application.properties` to set the appropriate
+1. Change into the demo directory
+
+2. Edit `src/main/resources/application.properties` to set the appropriate
    values.
 
-2. Run maven with `mvn`.
+3. Run maven with `mvn`.
 
-3. Navigate to [http://localhost:8080/](http://localhost:8080/).
+4. Navigate to [http://localhost:8080/](http://localhost:8080/).

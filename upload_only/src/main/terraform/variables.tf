@@ -3,6 +3,7 @@ variable "AWS_SECRET_KEY" {}
 
 variable "aws_conf" {
   default = {
+    region = "__REGION__"
     user = "__USER__"
     group = "__GROUP__"
     environment = "__ENVIRONMENT__"
