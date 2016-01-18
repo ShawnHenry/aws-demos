@@ -14,3 +14,5 @@ The demos are as follows:
 * [video_transcode](video_transcode/) - upload to S3, then kick off an
   [Elastic Transcoder](https://aws.amazon.com/elastictranscoder/) job via
   [Lambda](https://aws.amazon.com/lambda/).
+* [sns-demo](sns-demo) - Receiving notifications from
+  [SNS](https://aws.amazon.com/sns/).

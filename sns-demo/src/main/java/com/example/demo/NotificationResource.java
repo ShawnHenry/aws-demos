@@ -34,9 +34,11 @@ public class NotificationResource {
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(headers = "x-amz-sns-message-type=SubscriptionConfirmation")
-	public void handleSubscriptionMessage(@RequestBody String payload) throws IOException {
+	public void handleSubscriptionMessage(@RequestBody String payload) throws IOException, CertificateException {
 		LOG.info("Subscribing");
 		Map<String,String> request = (Map<String,String>) mapper.readValue(payload, Map.class);
+
+		checkSignature(request);
 
 		ResponseEntity<String> response = new RestTemplate().getForEntity(request.get("SubscribeURL"), String.class);
 
@@ -47,8 +49,9 @@ public class NotificationResource {
 	@RequestMapping(headers = "x-amz-sns-message-type=Notification")
 	public void handleNotificationMessage(@RequestBody String payload) throws IOException, CertificateException {
 		Map<String,String> request = (Map<String,String>) mapper.readValue(payload, Map.class);
-		String signingCertURL = request.get("SigningCertURL");
-		new SignatureChecker().verifySignature(request, getSigningKey(signingCertURL));
+
+		checkSignature(request);
+
 		LOG.info("Payload: {}", payload);
 		LOG.info("Message: {}", mapper.readValue(request.get("Message"), Map.class));
 	}
@@ -58,8 +61,21 @@ public class NotificationResource {
 		LOG.info("Unsubscribe received");
 	}
 
-	private PublicKey getSigningKey(String urlStr) throws IOException, CertificateException {
+	private static void checkSignature(Map<String,String> request) throws IOException, CertificateException {
+		String signingCertURL = request.get("SigningCertURL");
+		new SignatureChecker().verifySignature(request, getSigningKey(signingCertURL));
+	}
+
+	private static PublicKey getSigningKey(String urlStr) throws IOException, CertificateException {
 		URL url = new URL(urlStr);
+
+		/* Is this fragile? But how else to ensure we're fetching the certificate from an
+		 * acceptable place? Cache it on first use? */
+		if (!url.getHost().endsWith(".amazonaws.com")) {
+			LOG.warn("Signing URL not for amazonaws.com! Got: {}", url.getHost());
+			throw new IllegalArgumentException("Signing URL not for expected AWS host!");
+		}
+
 		InputStream inStream = url.openStream();
 		CertificateFactory cf = CertificateFactory.getInstance("X.509");
 		X509Certificate cert = (X509Certificate) cf.generateCertificate(inStream);

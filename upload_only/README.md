@@ -1,6 +1,6 @@
 # S3 Direct Upload Demo using Spring
 
-# Provisioning
+## Provisioning
 
 There is a [Terraform]() configuration under
 `src/main/terraform`. You can build the necessary infrastructure to run
@@ -23,7 +23,7 @@ each demo as follows.
 
     `terraform apply`
 
-# Running the demo
+## Running the demo
 
 1. Edit `src/main/resources/application.properties` to set the appropriate
    values.

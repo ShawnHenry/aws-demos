@@ -1,6 +1,6 @@
 # S3 Direct Upload And Video Transcoding Demo
 
-# Provisioning
+## Provisioning
 
 Unlike the [upload only](../upload_only/) demo, provisioning for this demo
 is harder because it's not yet possible to automate all the steps with
@@ -51,7 +51,7 @@ complete (it lacks Elastic Transcoder support).
     input bucket's properties. Change the Events sections and add a
     notification on `ObjectCreated` to call the lambda created above.
 
-# Running the demo
+## Running the demo
 
 1. Edit `src/main/resources/application.properties` to set the appropriate
    values.
